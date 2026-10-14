@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     resotore();
   }, []);
   return (
-    <AuthContext.Provider value={{ user, setUser,loading }}>
+    <AuthContext.Provider value={{ user, setUser,loading, logOut }}>
       {children}
     </AuthContext.Provider>
   );
