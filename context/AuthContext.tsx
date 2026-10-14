@@ -1,33 +1,41 @@
-'use client'
+"use client";
 import { getMe } from "@/lib/auth.api";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
-const AuthContext = createContext<any>(null)
-export  function AuthProvider ({children}:{children:ReactNode}){
-    const [user, setUser] = useState(null)
-    useEffect(()=>{
-        
-        async function  resotore() {
-            const token = localStorage.getItem('token')
-            if(!token) return
-            try {
-  const data = await getMe();
+const AuthContext = createContext<any>(null);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const logOut = ()=>{
+    localStorage.removeItem('token')
+    setUser(null)
+  }
+  useEffect(() => {
+    async function resotore() {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const data = await getMe();
 
-  console.log("GetMe response:", data);
+        console.log("GetMe response:", data);
 
-  setUser(data);
-} catch (error) {
-  console.error("GetMe failed:", error);
+        setUser(data);
+      } catch (error) {
+        console.error("GetMe failed:", error);
+      }finally{
+        setLoading(false)
+      }
+    }
+    resotore();
+  }, []);
+  return (
+    <AuthContext.Provider value={{ user, setUser,loading }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
-            
-            
-        }
-        resotore()
-    },[])
-    return(
-        <AuthContext.Provider value={{user, setUser}}>{children}
-        </AuthContext.Provider>
-    )
-}
 
-export default AuthContext
+export default AuthContext;
