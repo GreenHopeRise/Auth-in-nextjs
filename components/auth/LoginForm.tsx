@@ -3,6 +3,7 @@ import AuthContext from "@/context/AuthContext"
 import { login } from "@/lib/auth.api"
 import { LoginFormValues, loginSchema } from "@/schemas/auth.schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 // import { useRouter } from "next/router"
 import { useContext, useState } from "react"
@@ -97,6 +98,7 @@ export default  function LoginForm() {
         >
           {isSubmitting ? "Logging in..." : "Login"}
         </button>
+        <p>don't have account ?<Link href='/register'>Register</Link></p>
       </form>
     </div>
   )

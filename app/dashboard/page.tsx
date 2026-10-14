@@ -9,9 +9,14 @@ export default function page() {
   return (
     <ProtectedRoute>
       <div>
-      <h1 className="text-2xl font-bold">Welcome, {user?.name}</h1>
+      <h1>Welcome {user?.name}</h1>
+
+<p>Role: {user?.role}</p>
     </div>
     <button onClick={logOut}>LogOut</button>
+    {user?.role === "admin" && (
+  <button>Delete Product</button>
+)}
     </ProtectedRoute>
   );
 }
