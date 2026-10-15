@@ -1,28 +1,47 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "@/lib/product.api";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+
+import {
+  createProduct,
+  getProducts,
+} from "@/lib/product.api";
 
 export default function ProductsClient() {
-  const {
-    data: products,
-    isLoading,
-    error,
-  } = useQuery({
+  const queryClient = useQueryClient();
+
+  const { data: products } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
   });
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
+  const createMutation = useMutation({
+    mutationFn: createProduct,
 
-  if (error) {
-    return <p>Failed to load products.</p>;
-  }
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
+    },
+  });
+
+  const handleCreate = () => {
+    createMutation.mutate({
+      name: "Test Product",
+      price: 100,
+    });
+  };
 
   return (
     <div>
+      <button onClick={handleCreate}>
+        Create Product
+      </button>
+
       {products?.map((product: any) => (
         <p key={product._id}>{product.name}</p>
       ))}
