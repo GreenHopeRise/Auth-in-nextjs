@@ -1,12 +1,12 @@
+import api from "./api";
+
 export async function login(email:string, password:string) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`,{
-        method: 'POST',
-        headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    
+    const response = await api.post('/auth/login',{email, password})
+    return response.data
+}
+export async function registers(name:string, email: string, password: string, role: string) {
+    const response = await api.post('/auth/register',{
+        name,email, password, role
     })
-    const data = await response.json()
-    return data
+    return response.data
 }
